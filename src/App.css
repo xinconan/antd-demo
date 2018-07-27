@@ -1,0 +1,28 @@
+.logo{
+  width: 120px;
+  height: 31px;
+  background: #1890ff;  
+  margin: 16px 28px 16px 0;
+  float: left;
+}
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color .3s;
+}
+.trigger:hover {
+  color: #1890ff;
+}
+.ant-layout-header{
+  background-color: #fff;
+  box-shadow: 0 5px 11px 0 rgba(50,50,50,.08);
+}
+.x-content{
+  margin-left: 200px;
+  transition: all .2s;
+}
+.x-content.collapsed{
+  margin-left: 80px;
+}
