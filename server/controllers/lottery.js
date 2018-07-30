@@ -1,7 +1,15 @@
-const axios = require('axios')
+const axios = require('axios');
+const API = 'https://miniprogram.hz-notary.com/app/api/';
 
 const list = (ctx)=>{
-  return axios.get('https://miniprogram.hz-notary.com/app/api/lottery?layPage.pageNum=1&layPage.pageSize=20')
+  let {pageNum} = ctx.query;
+  if(!pageNum) {
+    pageNum = 1;
+  }
+  if(pageNum < 1) {
+    pageNum = 1;
+  }
+  return axios.get(`${API}lottery?layPage.pageNum=${pageNum}&layPage.pageSize=20`)
   .then(resp => {
     console.log(resp.data)
     ctx.state = {

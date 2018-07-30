@@ -54,6 +54,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
+    "server": "node server/app.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
@@ -97,5 +98,6 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  }
+  },
+  "proxy": "http://localhost:8888"
 }
