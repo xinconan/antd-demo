@@ -38,7 +38,7 @@ class App extends Component {
         >
           <NavLeft/>
         </Sider>
-          <Content className={collapsed?'x-content collapsed':'x-content'} style={{ padding: 24, minHeight: 280,marginTop: 64 }}>
+          <Content className={collapsed?'x-content collapsed':'x-content'} style={{ minHeight: 280,marginTop: 64 }}>
             {this.props.children}
           </Content>
         </Layout>
