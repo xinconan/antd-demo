@@ -7,6 +7,21 @@ body {
   padding: 15px;
   background-color: #fff;
 }
+.x-mgb{
+  margin-bottom: 15px;
+}
+.x-mgl{
+  margin-left: 15px;
+}
 .x-mgr{
   margin-right: 15px;
+}
+.x-mgt{
+  margin-top: 15px;
+}
+.x-blank{
+  height: 15px;
+}
+p{
+  -webkit-margin-after: 0;
 }

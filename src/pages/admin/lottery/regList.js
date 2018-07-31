@@ -1,7 +1,8 @@
 // 摇号列表
 import React, { Component } from 'react';
 import axios from 'axios';
-import {Table} from 'antd';
+import {Breadcrumb, Divider, Table} from 'antd';
+import {NavLink} from 'react-router-dom';
 
 class RegList extends Component {
   constructor(props){
@@ -42,10 +43,19 @@ class RegList extends Component {
     },{
       title: '其他购房人及家庭成员',
       dataIndex: 'other_buyers_name',
-      width: 300,
+      width: 200,
     },{
       title: '其他购房人及家庭成员证件号码',
       dataIndex: 'other_buyers_idnumber',
+      render: text => (
+        <span>
+          {
+            text.split(',').map(v=>(
+              <p key={v}>{v}</p>
+            ))
+          }
+        </span>
+      )
     }];
   }
   componentDidMount(){
@@ -93,6 +103,13 @@ class RegList extends Component {
   render() { 
     return (
       <div className="x-bg">
+        <Breadcrumb separator=">">
+          <Breadcrumb.Item>
+            <NavLink to="/admin/lottery/list">摇号信息</NavLink>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>登记表</Breadcrumb.Item>
+        </Breadcrumb>
+        <Divider />
         <Table columns={this.columns} 
           dataSource={this.state.data} 
           rowKey={record => record.id}
