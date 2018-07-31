@@ -5,7 +5,8 @@ import Login from './pages/login';
 import Admin from './App';
 import Home from './pages/admin/home';
 import NoMatch from './pages/admin/noMatch';
-import Lottery from './pages/admin/lottery/list'
+import Lottery from './pages/admin/lottery/list';
+import RegList from './pages/admin/lottery/regList';
 
 class Router extends React.Component{
   render(){
@@ -20,6 +21,7 @@ class Router extends React.Component{
                 <Route exact path="/admin" component={Home}/>
                 <Route path="/admin/home" component={Home}/>
                 <Route path="/admin/lottery/list" component={Lottery}/>
+                <Route path="/admin/lottery/regList/:houseId" component={RegList}/>
                 <Route component={NoMatch}/>
               </Switch>
             </Admin>

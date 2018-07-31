@@ -31,7 +31,35 @@ const houseInfo = (ctx) => {
   })
 }
 
+
+// 登记列表
+const regList = (ctx)=>{
+  console.log(ctx.request.body)
+  let {pageNum, houseId} = ctx.request.body;
+  if(!houseId) {
+    ctx.state = {
+      code: -1,
+      msg: '确实必要参数'
+    }
+    return;
+  }
+  if(!pageNum) {
+    pageNum = 1;
+  }
+  if(pageNum < 1) {
+    pageNum = 1;
+  }
+  return axios.get(`${API}registrationList?layPage.pageNum=${pageNum}&layPage.pageSize=20&houses.id=${houseId}`)
+  .then(resp => {
+    ctx.state = {
+      code: 0,
+      data: resp.data
+    }
+  })
+}
+
 module.exports = {
   list,
+  regList,
   houseInfo
 }

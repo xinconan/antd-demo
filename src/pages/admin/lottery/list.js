@@ -26,7 +26,7 @@ class Lottery extends Component {
     }, {
       title: '状态',
       dataIndex: 'status',
-      width: 200,
+      width: 150,
       render: text => (
         <span>
           {text===1?'已摇号':'待摇号'}
@@ -35,11 +35,11 @@ class Lottery extends Component {
     },{
       title: '操作',
       dataIndex: 'id',
-      width: 220,
+      width: 300,
       render: (text,record)=>(
         <span>
-          <Button type="primary" onClick={()=>this.getHouseInfo(text)}>楼盘信息</Button>
-          <NavLink to="/admin/lottery/regList">登记报名表</NavLink>
+          <Button type="primary" className="x-mgr" onClick={()=>this.getHouseInfo(text)}>楼盘信息</Button>
+          <NavLink to={`/admin/lottery/regList/${text}`}>登记报名表</NavLink>
         </span>
       )
     }];
