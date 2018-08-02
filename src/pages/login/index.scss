@@ -1,0 +1,48 @@
+.login-wrapper{
+  background: #f0f2f5;
+  height: 100vh;
+  overflow: auto;
+  padding-top: 32px;
+
+  header{
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+
+    img{
+      height: 50px;
+      vertical-align: top;
+      margin-left: -15px;
+    }
+
+    .title{
+      font-size: 34px;
+      font-weight: 600;
+      color: #222;
+      position: relative;
+      top: -3px;
+    }
+  }
+
+  .login-form-wrapper{
+    width: 368px;
+    margin: 50px auto 0;
+
+    .login-form-button{
+      width: 100%;
+    }
+    .login-form-forgot{
+      float: right;
+    }
+  }
+}
+
+@media (min-width: 768px){
+  .login-wrapper{
+    background-image: url(https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg);
+    background-repeat: no-repeat;
+    background-position: center 110px;
+    background-size: 100%;
+    padding-top: 112px;
+  }
+}
