@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Modal,Table } from 'antd';
+import { Button, Modal,Table, Progress } from 'antd';
 import axios from 'axios';
 import {NavLink} from 'react-router-dom';
 import io from 'socket.io-client'
@@ -15,7 +15,8 @@ class Lottery extends Component {
       },
       houseInfo: {},
       loading: true,
-      showModal: false
+      showModal: false,
+      showProgress: false, // 进度条
     };
     this.columns = [{
       title: '摇号楼盘',
@@ -107,17 +108,40 @@ class Lottery extends Component {
   }
   componentDidMount(){
     this.fetch();
+    // 同步进度显示
+    socket.on('process', msg=>{
+      this.setState({
+        showProgress: true,
+        progress: msg*100
+      });
+    })
   }
   handleOk = (e) => {
     this.setState({
       showModal: false,
     });
   }
-
-  handleCancel = (e) => {
+  hideProgress =(e)=>{
     this.setState({
-      showModal: false,
+      showProgress: false
     });
+  }
+  syncHouse(){
+    const {houseInfo} = this.state;
+    axios.post('/api/sync/houseInfo', houseInfo)
+    .then(resp => {
+      if(resp.data.code===0){
+        Modal.success({
+          title: '同步成功',
+          content: `${houseInfo.house_name} 信息同步成功！`
+        });
+      }else {
+        Modal.error({
+          title: '同步失败',
+          content: `${houseInfo.house_name} 信息同步失败！原因：${resp.data.error}`
+        });
+      }
+    })
   }
   render() { 
     const {houseInfo} = this.state;
@@ -134,16 +158,27 @@ class Lottery extends Component {
         <Modal
           title={houseInfo.house_name}
           visible={this.state.showModal}
-          okText="确定"
-          cancelText="取消"
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
+          footer={(
+            <div>
+              <Button type="primary" onClick={()=>this.syncHouse()}>同步</Button>
+              <Button type="primary" onClick={()=>this.handleOk()}>确定</Button>
+            </div>
+          )}
         >
           <p>登记总数：{houseInfo.total_people}</p>
           <p>无房家庭：{houseInfo.homeless_people}</p>
           <p>可售房源套数：{houseInfo.house_number}</p>
           <p>无房家庭套数：{houseInfo.homeless_number}</p>
           <p>摇号时间：{houseInfo.lottery_time}</p>
+        </Modal>
+        <Modal
+          title="同步"
+          visible={this.state.showProgress}
+          closable={false}
+          footer={<Button type="primary" onClick={()=>this.hideProgress()}>确定</Button>}
+        >
+          <p>开始同步</p>
+          <Progress percent={this.state.progress}/>
         </Modal>
       </div>
     );

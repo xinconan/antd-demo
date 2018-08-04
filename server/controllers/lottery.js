@@ -1,5 +1,5 @@
 const axios = require('axios');
-const API = 'https://miniprogram.hz-notary.com/app/api/';
+const {lotteryApi} = require('../config')
 
 // 摇号楼盘列表
 const list = (ctx)=>{
@@ -10,7 +10,7 @@ const list = (ctx)=>{
   if(pageNum < 1) {
     pageNum = 1;
   }
-  return axios.get(`${API}lottery?layPage.pageNum=${pageNum}&layPage.pageSize=20`)
+  return axios.get(`${lotteryApi}lottery?layPage.pageNum=${pageNum}&layPage.pageSize=20`)
   .then(resp => {
     ctx.state = {
       code: 0,
@@ -22,7 +22,7 @@ const list = (ctx)=>{
 // 摇号楼盘详情信息
 const houseInfo = (ctx) => {
   const {id} = ctx.query;
-  return axios.get(`${API}houseDetail?houses.id=${id}`)
+  return axios.get(`${lotteryApi}houseDetail?houses.id=${id}`)
   .then(resp => {
     ctx.state = {
       code: 0,
@@ -49,7 +49,7 @@ const regList = (ctx)=>{
   if(pageNum < 1) {
     pageNum = 1;
   }
-  return axios.get(`${API}registrationList?layPage.pageNum=${pageNum}&layPage.pageSize=20&houses.id=${houseId}`)
+  return axios.get(`${lotteryApi}registrationList?layPage.pageNum=${pageNum}&layPage.pageSize=20&houses.id=${houseId}`)
   .then(resp => {
     ctx.state = {
       code: 0,
