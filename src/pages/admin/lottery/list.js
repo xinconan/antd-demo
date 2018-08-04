@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Button, Modal,Table } from 'antd';
 import axios from 'axios';
-import {NavLink} from 'react-router-dom'
-
+import {NavLink} from 'react-router-dom';
+import io from 'socket.io-client'
+const socket = io()
 class Lottery extends Component {
   constructor(props){
     super(props);
@@ -39,6 +40,7 @@ class Lottery extends Component {
       render: (text,record)=>(
         <span>
           <Button type="primary" className="x-mgr" onClick={()=>this.getHouseInfo(text)}>楼盘信息</Button>
+          <Button type="primary" className="x-mgr" icon="sync" onClick={()=>this.syncRegList(text)}></Button>
           <NavLink to={`/admin/lottery/regList/${text}`}>登记报名表</NavLink>
         </span>
       )
@@ -63,6 +65,7 @@ class Lottery extends Component {
       pageNum: pagination.current,
     });
   }
+  // 获取楼盘详情
   getHouseInfo(id){
     axios.get('/api/lottery/houseInfo', {
       params: {
@@ -77,7 +80,11 @@ class Lottery extends Component {
       }
     })
   }
-
+  // sync 同步登记
+  syncRegList(houseId){
+    socket.emit('task', {houseId})
+    console.log(houseId)
+  }
   fetch = (params={pageNum:1})=>{
     this.setState({ loading: true });
     axios.get('/api/lottery/list', {

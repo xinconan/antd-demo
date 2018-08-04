@@ -14,5 +14,17 @@ app.use(bodyParser())
 const router = require('./routes')
 app.use(router.routes())
 
+const server = require('http').createServer(app.callback())
+const io = require('socket.io')(server)
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+
+  // 同步任务
+  socket.on('task', (msg)=>{
+    console.log(msg)
+  })
+});
+
 // 启动程序，监听端口
-app.listen(config.port, () => console.log(`listening on port ${config.port}`))
+server.listen(config.port, () => console.log(`listening on port ${config.port}`))
