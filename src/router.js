@@ -14,7 +14,7 @@ class Router extends React.Component{
       <BrowserRouter>
         <div>
           <Route path="/login" component={Login}/> 
-          {/* <Route path="/" exact component={Admin}/>  */}
+          <Route path="/" exact component={Login}/> 
           <Route path="/admin" render={()=>(
             <Admin>
               <Switch>
