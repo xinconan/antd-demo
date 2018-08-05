@@ -112,7 +112,7 @@ class Lottery extends Component {
     socket.on('process', msg=>{
       this.setState({
         showProgress: true,
-        progress: msg*100
+        progress: (msg*100).toFixed(0)*1
       });
     })
   }

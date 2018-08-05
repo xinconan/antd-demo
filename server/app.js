@@ -3,6 +3,7 @@ const app = new Koa()
 const response = require('./middlewares/response')
 const bodyParser = require('koa-bodyparser')
 const config = require('./config')
+const crawler = require('./crawler')
 
 // 使用响应处理中间件
 app.use(response)
@@ -23,6 +24,7 @@ io.on('connection', function(socket){
   // 同步任务
   socket.on('task', (msg)=>{
     console.log(msg)
+    crawler.syncRegList(msg.houseId, socket);
   })
 });
 

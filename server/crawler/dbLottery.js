@@ -24,6 +24,16 @@ const insertHouse = async(houseInfo) => {
   }
 }
 
+const insertRegList = (regList) => {
+  // remove rownum
+  regList = regList.map(item=>{
+    delete item.rownum;
+    return item;
+  });
+  return mysql('register').insert(regList)
+}
+
 module.exports = {
-  insertHouse
+  insertHouse,
+  insertRegList
 }
