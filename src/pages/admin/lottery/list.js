@@ -135,6 +135,9 @@ class Lottery extends Component {
           title: '同步成功',
           content: `${houseInfo.house_name} 信息同步成功！`
         });
+        this.setState({
+          showModal: false
+        });
       }else {
         Modal.error({
           title: '同步失败',
@@ -158,6 +161,7 @@ class Lottery extends Component {
         <Modal
           title={houseInfo.house_name}
           visible={this.state.showModal}
+          closable={false}
           footer={(
             <div>
               <Button type="primary" onClick={()=>this.syncHouse()}>同步</Button>
