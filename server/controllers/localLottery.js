@@ -12,6 +12,30 @@ const syncHouse = async(ctx)=>{
   }
 }
 
+const isRegSync = async(ctx)=>{
+  let {id} = ctx.query;
+  if(id) {
+    let sync = await db.isRegSync(id);
+    if(sync.length){
+      ctx.state = {
+        code: 0,
+        data: sync[0]
+      }
+    }else{
+      ctx.state = {
+        code: -1,
+        msg: '该信息未同步，请先同步楼盘信息'
+      }
+    }
+  }else {
+    ctx.state = {
+      code: -1,
+      msg: 'id不能为空'
+    }
+  }
+}
+
 module.exports = {
-  syncHouse
+  syncHouse,
+  isRegSync
 }

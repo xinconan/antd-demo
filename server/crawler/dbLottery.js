@@ -33,7 +33,13 @@ const insertRegList = (regList) => {
   return mysql('register').insert(regList)
 }
 
+// 是否同步登记报名表
+const isRegSync = (houseId) => {
+  return mysql('house').select('reg_sync', 'result_sync').where('id', houseId)
+}
+
 module.exports = {
   insertHouse,
-  insertRegList
+  insertRegList,
+  isRegSync
 }

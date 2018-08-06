@@ -9,5 +9,6 @@ router.get('/lottery/list', lottery.list);
 router.get('/lottery/houseInfo', lottery.houseInfo);
 router.post('/lottery/regList', lottery.regList);
 router.post('/sync/houseInfo', localLottery.syncHouse);
+router.get('/sync/isRegSync', localLottery.isRegSync);
 
 module.exports = router;

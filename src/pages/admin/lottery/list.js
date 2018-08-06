@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Modal,Table, Progress } from 'antd';
+import { Button, message, Modal,Table, Progress } from 'antd';
 import axios from 'axios';
 import {NavLink} from 'react-router-dom';
 import io from 'socket.io-client'
@@ -28,7 +28,7 @@ class Lottery extends Component {
     }, {
       title: '状态',
       dataIndex: 'status',
-      width: 150,
+      width: 120,
       render: text => (
         <span>
           {text===1?'已摇号':'待摇号'}
@@ -37,12 +37,12 @@ class Lottery extends Component {
     },{
       title: '操作',
       dataIndex: 'id',
-      width: 300,
+      width: 320,
       render: (text,record)=>(
         <span>
-          <Button type="primary" className="x-mgr" onClick={()=>this.getHouseInfo(text)}>楼盘信息</Button>
-          <Button type="primary" className="x-mgr" icon="sync" onClick={()=>this.syncRegList(text)}></Button>
-          <NavLink to={`/admin/lottery/regList/${text}`}>登记报名表</NavLink>
+          <Button type="primary" className="x-mgr" onClick={()=>this.getHouseInfo(text)}>详情</Button>
+          <Button type="primary" className="x-mgr" icon="sync" onClick={()=>this.syncRegList(text)}>同步报名表</Button>
+          <NavLink to={`/admin/lottery/regList/${text}`}>报名表</NavLink>
         </span>
       )
     }];
@@ -82,9 +82,21 @@ class Lottery extends Component {
     })
   }
   // sync 同步登记
-  syncRegList(houseId){
-    socket.emit('task', {houseId})
-    console.log(houseId)
+  async syncRegList(houseId){
+    let status = await axios.get('/api/sync/isRegSync', {
+      params: {id: houseId}
+    });
+    status = status.data;
+    if(status.code === 0) {
+      if(status.data.reg_sync === 1) {
+        message.info('该信息已同步！');
+      }else {
+        socket.emit('task', {houseId})
+      }
+    }else{
+      message.error(status.msg || status.error);
+    }
+    // console.log(houseId)
   }
   fetch = (params={pageNum:1})=>{
     this.setState({ loading: true });
@@ -114,7 +126,10 @@ class Lottery extends Component {
         showProgress: true,
         progress: (msg*100).toFixed(0)*1
       });
-    })
+    });
+    socket.on('errMsg', msg => {
+      message.error(msg || '发生未知错误!')
+    });
   }
   handleOk = (e) => {
     this.setState({
