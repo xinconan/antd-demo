@@ -28,7 +28,7 @@ class Lottery extends Component {
     }, {
       title: '状态',
       dataIndex: 'status',
-      width: 120,
+      width: 100,
       render: text => (
         <span>
           {text===1?'已摇号':'待摇号'}
@@ -37,11 +37,12 @@ class Lottery extends Component {
     },{
       title: '操作',
       dataIndex: 'id',
-      width: 320,
+      width: 400,
       render: (text,record)=>(
         <span>
           <Button type="primary" className="x-mgr" onClick={()=>this.getHouseInfo(text)}>详情</Button>
-          <Button type="primary" className="x-mgr" icon="sync" onClick={()=>this.syncRegList(text)}>同步报名表</Button>
+          <Button type="primary" className="x-mgr" onClick={()=>this.syncRegList(text)}>同步报名表</Button>
+          <Button type="primary" className="x-mgr" icon="sync" onClick={()=>this.syncResultList(text)}>同步结果</Button>
           <NavLink to={`/admin/lottery/regList/${text}`}>报名表</NavLink>
         </span>
       )
@@ -91,12 +92,29 @@ class Lottery extends Component {
       if(status.data.reg_sync === 1) {
         message.info('该信息已同步！');
       }else {
-        socket.emit('task', {houseId})
+        socket.emit('task', {houseId, type: 'reg'})
       }
     }else{
       message.error(status.msg || status.error);
     }
-    // console.log(houseId)
+  }
+  // sync 同步登记结果
+  async syncResultList(houseId){
+    let status = await axios.get('/api/sync/isRegSync', {
+      params: {id: houseId}
+    });
+    status = status.data;
+    if(status.code === 0) {
+      if(status.data.reg_sync !== 1) {
+        message.error('请先同步报名表！');
+      }else if(status.data.result_sync === 1){
+        message.info('该信息已同步！');
+      }else {
+        socket.emit('task', {houseId, type: 'result'})
+      }
+    }else{
+      message.error(status.msg || status.error);
+    }
   }
   fetch = (params={pageNum:1})=>{
     this.setState({ loading: true });

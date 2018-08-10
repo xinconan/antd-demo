@@ -24,7 +24,18 @@ io.on('connection', function(socket){
   // 同步任务
   socket.on('task', (msg)=>{
     console.log(msg)
-    crawler.syncRegList(msg.houseId, socket);
+    switch(msg.type){
+      // 同步报名表
+      case 'reg':
+        crawler.syncRegList(msg.houseId, socket);
+        break;
+      // 同步摇号结果
+      case 'result': 
+        crawler.syncResultList(msg.houseId, socket);
+        break;
+      default:
+        break;
+    }
   })
 });
 
