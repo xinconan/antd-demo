@@ -43,11 +43,23 @@ const updateReg = (reg) => {
 }
 
 // 批量更新登记表
-const updateRegList = async(regList) => {
-  // TODO: 优化，一条一条更新太慢了，除了建临时表还没想到其他方法
-  for(const item of regList){
-    await updateReg(item);
-  }
+const updateRegList = async(regList, houseId) => {
+  // remove rownum, add house_id
+  regList = regList.map(item=>{
+    delete item.rownum;
+    item.house_id = houseId;
+    return item;
+  });
+  // save to result table
+  return mysql('result').insert(regList);
+}
+
+// update rank in register table
+const syncRankToReg = (houseId)=> {
+  const queryStr = `update result,register set register.rank = result.rank 
+    where register.serial_number = result.serial_number and 
+    result.house_id=?`;
+  return mysql.raw(queryStr, [houseId]);
 }
 
 // 是否同步登记报名表
@@ -75,6 +87,7 @@ module.exports = {
   insertHouse,
   insertRegList,
   isRegSync,
+  syncRankToReg,
   updateRegList,
   updateSyncRegStatus,
   updateSyncResultStatus
