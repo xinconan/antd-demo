@@ -42,7 +42,10 @@ class Lottery extends Component {
         <span>
           <Button type="primary" className="x-mgr" onClick={()=>this.getHouseInfo(text)}>详情</Button>
           <Button type="primary" className="x-mgr" onClick={()=>this.syncRegList(text)}>同步报名表</Button>
+          {// 已经摇号的才能同步
+            record.status === 1&&
           <Button type="primary" className="x-mgr" icon="sync" onClick={()=>this.syncResultList(text)}>同步结果</Button>
+          }
           <NavLink to={`/admin/lottery/regList/${text}`}>报名表</NavLink>
         </span>
       )
