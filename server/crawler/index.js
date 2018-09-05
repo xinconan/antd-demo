@@ -48,7 +48,7 @@ const syncResultList = async (houseId, socket) => {
     // 更新同步状态
     await updateSyncResultStatus(houseId);
     // TODO: 同步摇号结果到登记表中，这块还是执行很慢。。
-    await syncRankToReg(houseId);
+    // await syncRankToReg(houseId);
   }
 }
 
