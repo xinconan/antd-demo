@@ -16,6 +16,10 @@ const menuList = [
       title: '摇号查询',
       key: '/admin/lottery/search',
       icon: 'search'
+    },{
+      title: '新建楼盘',
+      key: '/admin/lottery/createHouse',
+      icon: 'plus'
     }]
   },{
     title: '页面',

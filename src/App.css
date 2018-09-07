@@ -26,3 +26,6 @@
 .x-content.collapsed{
   margin-left: 80px;
 }
+.ant-card-body .ant-form-horizontal{
+  max-width: 600px;
+}
