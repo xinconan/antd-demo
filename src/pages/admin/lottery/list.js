@@ -182,6 +182,10 @@ class Lottery extends Component {
       }
     })
   }
+  updateHouse(){
+    const {houseInfo} = this.state;
+    this.props.history.push(`/admin/lottery/house/${houseInfo.id}`);
+  }
   render() { 
     const {houseInfo} = this.state;
     return (
@@ -201,6 +205,7 @@ class Lottery extends Component {
           footer={(
             <div>
               <Button type="primary" onClick={()=>this.syncHouse()}>同步</Button>
+              <Button type="primary" onClick={()=>this.updateHouse()}>修改</Button>
               <Button type="primary" onClick={()=>this.handleOk()}>确定</Button>
             </div>
           )}
