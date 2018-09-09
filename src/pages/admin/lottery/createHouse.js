@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
-import {Button, DatePicker, Form, Card, Input, InputNumber} from 'antd';
+import {Button, DatePicker, message, Form, Card, Input, InputNumber} from 'antd';
+import axios from 'axios';
+import moment from 'moment'
 
 const FormItem = Form.Item;
 class CreateHouse extends PureComponent{
@@ -12,6 +14,15 @@ class CreateHouse extends PureComponent{
       if (!err) {
         console.log('Received values of form: ', values);
         // this.props.history.push('/admin/home');
+        if(values.lottery_time) {
+          values.lottery_time = moment(values.lottery_time).format('YYYY-MM-DD HH:mm:ss');
+        }
+        axios.post('/api/lottery/addHouse', values)
+        .then(resp=>{
+          if (resp.status === 200 && resp.data.code===0) {
+            message.success('添加成功');
+          }
+        })
       }
     });
   }
