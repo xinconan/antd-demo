@@ -22,8 +22,13 @@ const menuList = [
       icon: 'plus'
     }]
   },{
-    title: '页面',
-    key: '/admin/not-found'
+    title: 'DiyImg',
+    key: '/admin/diyimg',
+    icon: 'picture'
+  },{
+    title: '404页面',
+    key: '/admin/not-found',
+    icon: 'frown'
   }
 ]
 
