@@ -60,10 +60,22 @@ class CreateHouse extends PureComponent{
             >
               {getFieldDecorator('house_name', {
                 rules: [{
-                  required: true, message: '请输入楼盘名字',
+                  required: true, message: '请输入楼盘名称',
                 }],
               })(
-                <Input />
+                <Input placeholder="请输入楼盘名称"/>
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="楼盘别名（推广名）"
+            >
+              {getFieldDecorator('alias', {
+                rules: [{
+                  required: true, message: '请输入楼盘别名',
+                }],
+              })(
+                <Input placeholder="请输入楼盘别名"/>
               )}
             </FormItem>
             <FormItem
