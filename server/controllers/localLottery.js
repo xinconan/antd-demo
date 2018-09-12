@@ -64,8 +64,33 @@ const addHouse = async (ctx) =>{
   }
 }
 
+// 获取楼盘信息
+const getHouseInfo = async(ctx) => {
+  const {id} = ctx.query;
+  if(!id) {
+    ctx.state = {
+      code: -1,
+      msg: 'id不能为空'
+    }
+    return;
+  }
+  let house = await mysql('house').select().where('id', id);
+  if(house.length) {
+    ctx.state = {
+      code: 0,
+      data: house[0]
+    }
+  }else{
+    ctx.body={
+      code: -1,
+      msg: '无效的id'
+    }
+  }
+}
+
 module.exports = {
   syncHouse,
   isRegSync,
-  addHouse
+  addHouse,
+  getHouseInfo
 }
