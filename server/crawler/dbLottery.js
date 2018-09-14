@@ -2,7 +2,7 @@ const mysql = require('../mysql');
 
 // 插入houseInfo信息
 const insertHouse = async(houseInfo) => {
-  const {id, house_name, lottery_time, status, homeless_number, total_people, house_number, homeless_people} = houseInfo;
+  const {id, house_name, alias, lottery_time, status, homeless_number, total_people, house_number, homeless_people} = houseInfo;
   // 如果有该数据，直接更新
   let house = await mysql('house').select().where('id', id);
   if(house.length) {
@@ -13,6 +13,7 @@ const insertHouse = async(houseInfo) => {
   }else {
     return mysql('house').insert({
       id,
+      alias,
       house_name,
       lottery_time,
       status,
@@ -56,9 +57,9 @@ const updateRegList = async(regList, houseId) => {
 
 // update rank in register table
 const syncRankToReg = (houseId)=> {
-  const queryStr = `update result,register set register.rank = result.rank 
-    where register.serial_number = result.serial_number and 
-    result.house_id=?`;
+  const queryStr = `update register left join result on register.serial_number = result.serial_number
+   set register.rank = result.rank 
+    where  result.house_id=?`;
   return mysql.raw(queryStr, [houseId]);
 }
 

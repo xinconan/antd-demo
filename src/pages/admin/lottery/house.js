@@ -1,15 +1,20 @@
 import React, { PureComponent } from 'react';
 import {Button, DatePicker, Form, Card, Input, InputNumber} from 'antd';
 import moment from 'moment'
+import utils from '../../../utils';
 import ajax from '../../../ajax';
 
 const FormItem = Form.Item;
 class CreateHouse extends PureComponent{
+  constructor(props){
+    super(props);
+    this.id = this.props.match.params.houseId;
+  }
   componentDidMount(){
     ajax({
       method: 'get',
       url: '/api/lottery/dbHouseInfo',
-      data: {id: this.props.match.params.houseId}
+      data: {id: this.id}
     }).then(resp=>{
       const data = resp.data;
       if(data) {
@@ -31,16 +36,18 @@ class CreateHouse extends PureComponent{
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        // this.props.history.push('/admin/home');
         if(values.lottery_time) {
           values.lottery_time = moment(values.lottery_time).format('YYYY-MM-DD HH:mm:ss');
         }
-        // axios.post('/api/lottery/addHouse', values)
-        // .then(resp=>{
-        //   if (resp.status === 200 && resp.data.code===0) {
-        //     message.success('添加成功');
-        //   }
-        // })
+        values.id = this.id;
+        ajax({
+          url: '/api/sync/houseInfo',
+          data: values
+        }).then(resp=>{
+          if(resp.code === 0) {
+            utils.success('修改成功');
+          }
+        });
       }
     });
   }
@@ -88,11 +95,7 @@ class CreateHouse extends PureComponent{
               {...formItemLayout}
               label="楼盘别名（推广名）"
             >
-              {getFieldDecorator('alias', {
-                rules: [{
-                  required: true, message: '请输入楼盘别名',
-                }],
-              })(
+              {getFieldDecorator('alias')(
                 <Input placeholder="请输入楼盘别名"/>
               )}
             </FormItem>
