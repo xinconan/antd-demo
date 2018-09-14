@@ -77,12 +77,10 @@ class Lottery extends Component {
         id
       }
     }).then(res=>{
-      if (res.status === 200 && res.data.code===0) {
-        this.setState({
-          showModal: true,
-          houseInfo: res.data.data.data
-        });
-      }
+      this.setState({
+        showModal: true,
+        houseInfo: res.data.data
+      });
     })
   }
   // sync 同步登记
@@ -90,7 +88,7 @@ class Lottery extends Component {
     let status = await axios.get('/api/sync/isRegSync', {
       params: {id: houseId}
     });
-    status = status.data;
+    // status = status.data;
     if(status.code === 0) {
       if(status.data.reg_sync === 1) {
         message.info('该信息已同步！');
@@ -106,7 +104,7 @@ class Lottery extends Component {
     let status = await axios.get('/api/sync/isRegSync', {
       params: {id: houseId}
     });
-    status = status.data;
+    // status = status.data;
     if(status.code === 0) {
       if(status.data.reg_sync !== 1) {
         message.error('请先同步报名表！');
@@ -124,19 +122,17 @@ class Lottery extends Component {
     axios.get('/api/lottery/list', {
       params
     }).then((res) => {
-      if (res.status === 200 && res.data.code===0) {
-        const data = res.data.data;
-        const pagination = { ...this.state.pagination };
-        const list = { ...this.state.list };
-        pagination.total = data.rowCnt; // 总数量
-        list[params.pageNum] = data.dataList; // 缓存
-        this.setState({
-          loading: false,
-          data: data.dataList,
-          list,
-          pagination
-        });
-      }
+      const data = res.data;
+      const pagination = { ...this.state.pagination };
+      const list = { ...this.state.list };
+      pagination.total = data.rowCnt; // 总数量
+      list[params.pageNum] = data.dataList; // 缓存
+      this.setState({
+        loading: false,
+        data: data.dataList,
+        list,
+        pagination
+      });
     })
   }
   componentDidMount(){
@@ -166,7 +162,7 @@ class Lottery extends Component {
     const {houseInfo} = this.state;
     axios.post('/api/sync/houseInfo', houseInfo)
     .then(resp => {
-      if(resp.data.code===0){
+      if(resp.code===0){
         Modal.success({
           title: '同步成功',
           content: `${houseInfo.house_name} 信息同步成功！`

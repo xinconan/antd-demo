@@ -1,13 +1,31 @@
 import React, { PureComponent } from 'react';
-import {Button, DatePicker, message, Form, Card, Input, InputNumber} from 'antd';
-import axios from 'axios';
+import {Button, DatePicker, Form, Card, Input, InputNumber} from 'antd';
 import moment from 'moment'
+import ajax from '../../../ajax';
 
 const FormItem = Form.Item;
 class CreateHouse extends PureComponent{
-  // constructor(props){
-  //   super(props);
-  // }
+  componentDidMount(){
+    ajax({
+      method: 'get',
+      url: '/api/lottery/dbHouseInfo',
+      data: {id: this.props.match.params.houseId}
+    }).then(resp=>{
+      const data = resp.data;
+      if(data) {
+        this.props.form.setFieldsValue({
+          // ...data, 使用这个需要剔除form表单中不存在的字段
+          house_name: data.house_name,
+          alias: data.alias,
+          homeless_number: data.homeless_number,
+          total_people: data.total_people,
+          homeless_people: data.homeless_people,
+          house_number: data.house_number,
+          lottery_time: moment(data.lottery_time)
+        })
+      }
+    })
+  }
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -17,12 +35,12 @@ class CreateHouse extends PureComponent{
         if(values.lottery_time) {
           values.lottery_time = moment(values.lottery_time).format('YYYY-MM-DD HH:mm:ss');
         }
-        axios.post('/api/lottery/addHouse', values)
-        .then(resp=>{
-          if (resp.status === 200 && resp.data.code===0) {
-            message.success('添加成功');
-          }
-        })
+        // axios.post('/api/lottery/addHouse', values)
+        // .then(resp=>{
+        //   if (resp.status === 200 && resp.data.code===0) {
+        //     message.success('添加成功');
+        //   }
+        // })
       }
     });
   }
