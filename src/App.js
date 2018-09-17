@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Layout, Icon } from 'antd';
+import { Layout, Icon } from 'antd';
+// import {withRouter} from 'react-router-dom'
 import './App.css';
 import NavLeft from './components/NavLeft'
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 
 class App extends Component {
   constructor(props){
@@ -21,7 +22,7 @@ class App extends Component {
     return (
       <Layout>
         <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
-          <div className="logo" />
+          <div className="logo">ANTD DEMO</div>
           <Icon
               className="trigger"
               type={collapsed ? 'menu-unfold' : 'menu-fold'}
