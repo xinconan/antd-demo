@@ -10,6 +10,7 @@ import Lottery from './pages/admin/lottery/list';
 import RegList from './pages/admin/lottery/regList';
 import createHouse from './pages/admin/lottery/createHouse';
 import House from './pages/admin/lottery/house';
+import Search from './pages/admin/lottery/search';
 
 class Router extends React.Component{
   render(){
@@ -28,6 +29,7 @@ class Router extends React.Component{
                 <Route path="/admin/lottery/regList/:houseId" component={RegList}/>
                 <Route path="/admin/lottery/house/:houseId" component={House}/>
                 <Route path="/admin/lottery/createHouse" component={createHouse}/>
+                <Route path="/admin/lottery/search" component={Search}/>
                 <Route component={NoMatch}/>
               </Switch>
             </Admin>
