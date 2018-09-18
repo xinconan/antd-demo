@@ -1,5 +1,3 @@
-const axios = require('axios');
-const {lotteryApi} = require('../config');
 const db = require('../crawler/dbLottery');
 const mysql = require('../mysql');
 const utils = require('../utils');
@@ -88,9 +86,40 @@ const getHouseInfo = async(ctx) => {
   }
 }
 
+// 分页获取楼盘列表, 从0开始
+const getHouseList = async(ctx)=>{
+  let {pageNum, pageSize} = ctx.query;
+  if(typeof pageNum	=== 'undefined' || pageNum < 0) {
+    pageNum = 0;
+  }
+  if(typeof pageSize === 'undefined') {
+    pageSize = 20;
+  }
+  if(pageSize < 1 || pageSize > 20) {
+    pageSize = 20;
+  }
+  console.log('pageNum: '+pageNum + ' pageSize: '+ pageSize)
+
+  // 总记录   [{"count(*)":112}]
+  let total = await mysql('house').count();
+  total = total[0]['count(*)'];  // 需要这样获取，有点反人类
+  let totalPage = Math.ceil(total / pageSize) ;
+  let data = {
+    totalPage: totalPage, // 总页数
+    pageNum: pageNum,
+    pageSize: pageSize,
+    hasNext: pageNum < totalPage,  // 是否还有下一页
+  }
+  ctx.state = {
+    code: 0,
+    data: data
+  }
+}
+
 module.exports = {
   syncHouse,
   isRegSync,
   addHouse,
-  getHouseInfo
+  getHouseInfo,
+  getHouseList
 }

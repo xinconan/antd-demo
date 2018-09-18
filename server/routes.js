@@ -12,5 +12,6 @@ router.post('/lottery/regList', lottery.regList);
 router.post('/sync/houseInfo', localLottery.syncHouse);
 router.get('/sync/isRegSync', localLottery.isRegSync);
 router.post('/lottery/addHouse', localLottery.addHouse);
+router.get('/lottery/houseList', localLottery.getHouseList);
 
 module.exports = router;
