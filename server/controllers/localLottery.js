@@ -108,8 +108,13 @@ const getHouseList = async(ctx)=>{
     totalPage: totalPage, // 总页数
     pageNum: pageNum,
     pageSize: pageSize,
-    hasNext: pageNum < totalPage,  // 是否还有下一页
+    hasNext: pageNum < totalPage - 1,  // 是否还有下一页
   }
+
+  // 查询
+  // select * from house order by lottery_time desc limit 10 offset 0;
+  const list = await mysql('house').orderBy('lottery_time', 'desc').limit(pageSize).offset(pageNum*pageSize);
+  data.list = list;
   ctx.state = {
     code: 0,
     data: data
