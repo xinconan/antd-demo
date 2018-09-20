@@ -80,7 +80,8 @@ const updateSyncRegStatus = (houseId) => {
 const updateSyncResultStatus = (houseId) => {
   return mysql('house')
   .update({
-    result_sync: 1
+    result_sync: 1,
+    status: 1,  // 更新了摇号结果，同步更新楼盘状态为已摇号
   }).where('id', houseId);
 }
 

@@ -1,3 +1,4 @@
+const moment = require('moment');
 const db = require('../crawler/dbLottery');
 const mysql = require('../mysql');
 const utils = require('../utils');
@@ -105,6 +106,7 @@ const getHouseList = async(ctx)=>{
   total = total[0]['count(*)'];  // 需要这样获取，有点反人类
   let totalPage = Math.ceil(total / pageSize) ;
   let data = {
+    total,
     totalPage: totalPage, // 总页数
     pageNum: pageNum,
     pageSize: pageSize,
@@ -114,6 +116,7 @@ const getHouseList = async(ctx)=>{
   // 查询
   // select * from house order by lottery_time desc limit 10 offset 0;
   const list = await mysql('house').orderBy('lottery_time', 'desc').limit(pageSize).offset(pageNum*pageSize);
+  list.map(item=> item.lottery_time = moment(item.lottery_time).format('YYYY-MM-DD HH:mm:ss'))
   data.list = list;
   ctx.state = {
     code: 0,
