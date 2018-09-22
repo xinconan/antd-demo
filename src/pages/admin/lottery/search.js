@@ -84,16 +84,36 @@ class Search extends Component {
     }, {
       title: '推广名',
       dataIndex: 'alias',
-      width: 200,
+      width: 120,
+      editable: true,
+    }, {
+      title: '申购家庭登记总数',
+      dataIndex: 'total_people',
+      width: 100,
+      editable: true,
+    }, {
+      title: '申购无房家庭总数',
+      dataIndex: 'homeless_people',
+      width: 100,
+      editable: true,
+    }, {
+      title: '可售房源套数',
+      dataIndex: 'house_number',
+      width: 100,
+      editable: true,
+    }, {
+      title: '无房家庭套数',
+      dataIndex: 'homeless_number',
+      width: 100,
       editable: true,
     },{
       title: '摇号时间',
       dataIndex: 'lottery_time',
-      width: 200,
+      width: 100,
     }, {
       title: '状态',
       dataIndex: 'status',
-      width: 100,
+      width: 80,
       render: text => (
         <span>
           {text===1?'已摇号':'待摇号'}
@@ -102,7 +122,7 @@ class Search extends Component {
     },{
       title: '操作',
       dataIndex: 'id',
-      width: 400,
+      width: 200,
       render: (text,record)=>{
         const editable = this.isEditing(record);
         return <span>
