@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Card, Form, Input, message, Modal, Table, Progress } from 'antd';
+import { Button, Card, Form, Input, InputNumber, message, Modal, Table, Progress } from 'antd';
 import axios from 'axios';
 import ajax from '../../../ajax'
 import {NavLink} from 'react-router-dom';
@@ -7,6 +7,61 @@ import io from 'socket.io-client'
 const socket = io()
 
 const FormItem = Form.Item;
+const editStyle = { marginRight: 10 };
+
+const EditableContext = React.createContext();
+
+const EditableRow = ({ form, index, ...props }) => (
+  <EditableContext.Provider value={form}>
+    <tr {...props} />
+  </EditableContext.Provider>
+);
+
+const EditableFormRow = Form.create()(EditableRow);
+
+class EditableCell extends React.Component {
+  getInput = () => {
+    if (this.props.inputType === 'number') {
+      return <InputNumber />;
+    }
+    return <Input />;
+  };
+
+  render() {
+    const {
+      editing,
+      dataIndex,
+      title,
+      inputType,
+      record,
+      index,
+      ...restProps
+    } = this.props;
+    return (
+      <EditableContext.Consumer>
+        {(form) => {
+          const { getFieldDecorator } = form;
+          return (
+            <td {...restProps}>
+              {editing ? (
+                <FormItem style={{ margin: 0 }}>
+                  {getFieldDecorator(dataIndex, {
+                    rules: [{
+                      required: true,
+                      message: `Please Input ${title}!`,
+                    }],
+                    initialValue: record[dataIndex],
+                  })(this.getInput())}
+                </FormItem>
+              ) : restProps.children}
+            </td>
+          );
+        }}
+      </EditableContext.Consumer>
+    );
+  }
+}
+
 class Search extends Component {
   constructor(props){
     super(props);
@@ -16,6 +71,7 @@ class Search extends Component {
       pagination: {
         defaultPageSize: 20
       },
+      editingKey: '',
       houseInfo: {},
       loading: true,
       showModal: false,
@@ -24,10 +80,12 @@ class Search extends Component {
     this.columns = [{
       title: '摇号楼盘',
       dataIndex: 'house_name',
+      editable: true,
     }, {
       title: '推广名',
       dataIndex: 'alias',
       width: 200,
+      editable: true,
     },{
       title: '摇号时间',
       dataIndex: 'lottery_time',
@@ -45,8 +103,28 @@ class Search extends Component {
       title: '操作',
       dataIndex: 'id',
       width: 400,
-      render: (text,record)=>(
-        <span>
+      render: (text,record)=>{
+        const editable = this.isEditing(record);
+        return <span>
+          {editable?(
+            <span>
+              <EditableContext.Consumer>
+                {form => (
+                  <a
+                    onClick={() => this.save(form, record.id)}
+                    style={editStyle}
+                  >
+                    保存
+                  </a>
+                )}
+              </EditableContext.Consumer>
+              <a onClick={() => this.cancel(record.id)} style={editStyle}>取消</a>
+            </span>
+            ) : (
+              <a onClick={() => this.edit(record.id)} style={editStyle}>修改</a>
+            )
+
+          }
           {record.reg_sync===0&&
           <Button type="primary" className="x-mgr" onClick={()=>this.syncRegList(text)}>同步报名表</Button>}
           {// 已经摇号的才能同步
@@ -55,7 +133,7 @@ class Search extends Component {
           }
           <NavLink to={`/admin/lottery/regList/${text}`}>报名表</NavLink>
         </span>
-      )
+      }
     }];
   }
   // 请求不同页面数据
@@ -66,15 +144,16 @@ class Search extends Component {
     this.setState({
       pagination: pager,
     });
+    const pageNum = pager.current - 1;  // local db from 0 start
     // 如果当前页面数据请求过，不走服务器
-    if(this.state.list[pager.current]) {
+    if(this.state.list[pageNum]) {
       this.setState({
-        data: this.state.list[pager.current]
+        data: this.state.list[pageNum]
       });
       return;
     }
     this.fetch({
-      pageNum: pagination.current,
+      pageNum, 
     });
   }
   // 获取楼盘详情
@@ -167,10 +246,10 @@ class Search extends Component {
       showProgress: false
     });
   }
-  syncHouse(){
-    const {houseInfo} = this.state;
+  syncHouse(houseInfo, showMsg=false){
     axios.post('/api/sync/houseInfo', houseInfo)
     .then(resp => {
+      if(!showMsg) return;
       if(resp.code===0){
         Modal.success({
           title: '同步成功',
@@ -191,9 +270,64 @@ class Search extends Component {
     const {houseInfo} = this.state;
     this.props.history.push(`/admin/lottery/house/${houseInfo.id}`);
   }
+  isEditing = (record) => {
+    return record.id === this.state.editingKey;
+  };
+
+  edit(key) {
+    this.setState({ editingKey: key });
+  }
+  save(form, key) {
+    form.validateFields((error, row) => {
+      if (error) {
+        return;
+      }
+      const newData = [...this.state.data];
+      const index = newData.findIndex(item => key === item.id);
+      if (index > -1) {
+        const item = newData[index];
+        const newItem = {
+          ...item,
+          ...row,
+        }
+        this.syncHouse(newItem);
+        newData.splice(index, 1, newItem);
+        this.setState({ data: newData, editingKey: '' });
+      } else {
+        newData.push(row);
+        this.setState({ data: newData, editingKey: '' });
+      }
+    });
+  }
+
+  cancel = () => {
+    this.setState({ editingKey: '' });
+  };
   render() { 
     const {houseInfo} = this.state;
     const { getFieldDecorator } = this.props.form;
+    const components = {
+      body: {
+        row: EditableFormRow,
+        cell: EditableCell,
+      },
+    };
+
+    const columns = this.columns.map((col) => {
+      if (!col.editable) {
+        return col;
+      }
+      return {
+        ...col,
+        onCell: record => ({
+          record,
+          inputType: col.dataIndex === 'age' ? 'number' : 'text',
+          dataIndex: col.dataIndex,
+          title: col.title,
+          editing: this.isEditing(record),
+        }),
+      };
+    });
     return (
       <div className="x-bg">
         <Card style={{marginBottom: '20px'}}>
@@ -214,7 +348,8 @@ class Search extends Component {
               
           </Form>
         </Card>
-        <Table columns={this.columns} 
+        <Table columns={columns} 
+          components={components}
           dataSource={this.state.data} 
           rowKey={record => record.id}
           pagination={this.state.pagination}
@@ -228,7 +363,7 @@ class Search extends Component {
           closable={false}
           footer={(
             <div>
-              <Button type="primary" onClick={()=>this.syncHouse()}>同步</Button>
+              <Button type="primary" onClick={()=>this.syncHouse(houseInfo, true)}>同步</Button>
               <Button type="primary" onClick={()=>this.updateHouse()}>修改</Button>
               <Button type="primary" onClick={()=>this.handleOk()}>确定</Button>
             </div>
