@@ -89,7 +89,7 @@ const getHouseInfo = async(ctx) => {
 
 // 分页获取楼盘列表, 从0开始
 const getHouseList = async(ctx)=>{
-  let {pageNum, pageSize} = ctx.query;
+  let {pageNum, pageSize, name} = ctx.query;
   if(typeof pageNum	=== 'undefined' || pageNum < 0) {
     pageNum = 0;
   }
@@ -102,7 +102,14 @@ const getHouseList = async(ctx)=>{
   console.log('pageNum: '+pageNum + ' pageSize: '+ pageSize)
 
   // 总记录   [{"count(*)":112}]
-  let total = await mysql('house').count();
+  let total = 0;
+  if(name){
+    total = await mysql('house').count()
+            .where('house_name', 'like', `%${name}%`)
+            .orWhere('alias', 'like', `%${name}%`);
+  }else{
+    total = await mysql('house').count();
+  }
   total = total[0]['count(*)'];  // 需要这样获取，有点反人类
   let totalPage = Math.ceil(total / pageSize) ;
   let data = {
@@ -115,7 +122,16 @@ const getHouseList = async(ctx)=>{
 
   // 查询
   // select * from house order by lottery_time desc limit 10 offset 0;
-  const list = await mysql('house').orderBy('lottery_time', 'desc').limit(pageSize).offset(pageNum*pageSize);
+  let list;
+  if(name){
+    list = await mysql('house').orderBy('lottery_time', 'desc')
+            .limit(pageSize).offset(pageNum*pageSize)
+            .where('house_name', 'like', `%${name}%`)
+            .orWhere('alias', 'like', `%${name}%`);
+  }else{
+    list = await mysql('house').orderBy('lottery_time', 'desc')
+            .limit(pageSize).offset(pageNum*pageSize);
+  }
   list.map(item=> item.lottery_time = moment(item.lottery_time).format('YYYY-MM-DD HH:mm:ss'))
   data.list = list;
   ctx.state = {

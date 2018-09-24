@@ -77,6 +77,7 @@ class Search extends Component {
       showModal: false,
       showProgress: false, // 进度条
     };
+    this.searchStr = '';
     this.columns = [{
       title: '摇号楼盘',
       dataIndex: 'house_name',
@@ -224,6 +225,10 @@ class Search extends Component {
     }
   }
   fetch = (params={pageNum:0})=>{
+    // 搜索字符串
+    if(this.searchStr) {
+      params.name = this.searchStr;
+    }
     this.setState({ loading: true });
     ajax({
       url: '/api/lottery/houseList',
@@ -255,6 +260,16 @@ class Search extends Component {
     });
     socket.on('errMsg', msg => {
       message.error(msg || '发生未知错误!')
+    });
+  }
+  handleSearch = (e) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+        this.searchStr = values.name;
+        this.fetch();
+      }
     });
   }
   handleOk = (e) => {
@@ -359,7 +374,7 @@ class Search extends Component {
             <FormItem
               label="楼盘名"
             >
-              {getFieldDecorator('userName')(
+              {getFieldDecorator('name')(
                 <Input placeholder="请输入楼盘名或推广名" />
               )}
             </FormItem>
