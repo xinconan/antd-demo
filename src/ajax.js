@@ -81,7 +81,7 @@ function responseHandler(response) {
           defaultMsg = defaultMsg(data);
       }
 
-      data.msg = data.msg || defaultMsg;
+      data.msg = data.msg || data.error || defaultMsg;
       // 业务失败，也reject
       utils.error(data.msg);
     //   return Promise.reject(data.msg);

@@ -230,6 +230,7 @@ class Search extends Component {
       method: 'get',
       data: params
     }).then((res) => {
+      if(res.code === -1) return;
       const data = res.data;
       const pagination = { ...this.state.pagination };
       const list = { ...this.state.list };
