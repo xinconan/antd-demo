@@ -39,7 +39,7 @@ const isRegSync = async(ctx)=>{
 
 // 添加楼盘信息到house_old表中
 const addHouse = async (ctx) =>{
-  const {house_name, lottery_time, homeless_number, total_people, house_number, homeless_people} = ctx.request.body;
+  const {house_name, alias, lottery_time, homeless_number, total_people, house_number, homeless_people} = ctx.request.body;
   if(!house_name) {
     ctx.body = {
       code: -1,
@@ -51,6 +51,8 @@ const addHouse = async (ctx) =>{
   await mysql('house_old').insert({
     id,
     house_name,
+    alias,
+    status: 1, // old 表中都是已经摇过号的
     lottery_time,
     homeless_number,
     total_people,

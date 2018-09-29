@@ -19,7 +19,7 @@ class CreateHouse extends PureComponent{
         }
         axios.post('/api/lottery/addHouse', values)
         .then(resp=>{
-          if (resp.status === 200 && resp.data.code===0) {
+          if (resp.code===0) {
             message.success('添加成功');
           }
         })
@@ -63,7 +63,15 @@ class CreateHouse extends PureComponent{
                   required: true, message: '请输入楼盘名字',
                 }],
               })(
-                <Input />
+                <Input placeholder="请输入楼盘名"/>
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="推广名"
+            >
+              {getFieldDecorator('alias')(
+                <Input placeholder="请输入推广名"/>
               )}
             </FormItem>
             <FormItem
