@@ -2,13 +2,36 @@ const mysql = require('../mysql');
 
 // 插入houseInfo信息
 const insertHouse = async(houseInfo) => {
-  const {id, house_name, alias, lottery_time, status, homeless_number, total_people, house_number, homeless_people} = houseInfo;
+  const {
+    id, 
+    house_name, 
+    alias,
+    lottery_time, 
+    status, 
+    homeless_number, 
+    total_people, 
+    house_number, 
+    homeless_people,
+    average_price,
+    main_house_type,
+    deposit,
+  } = houseInfo;
   // 如果有该数据，直接更新
   let house = await mysql('house').select().where('id', id);
   if(house.length) {
     return mysql('house').update({
       ...house[0],
-      ...houseInfo
+      house_name, 
+      alias,
+      lottery_time, 
+      status, 
+      homeless_number, 
+      total_people, 
+      house_number, 
+      homeless_people,
+      average_price,
+      main_house_type,
+      deposit,
     }).where('id',id);
   }else {
     return mysql('house').insert({
@@ -20,7 +43,10 @@ const insertHouse = async(houseInfo) => {
       homeless_number,
       total_people,
       house_number,
-      homeless_people
+      homeless_people,
+      average_price,
+      main_house_type,
+      deposit,
     })
   }
 }

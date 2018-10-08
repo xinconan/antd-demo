@@ -35,6 +35,7 @@ class EditableCell extends React.Component {
       inputType,
       record,
       index,
+      required,
       ...restProps
     } = this.props;
     return (
@@ -47,8 +48,8 @@ class EditableCell extends React.Component {
                 <FormItem style={{ margin: 0 }}>
                   {getFieldDecorator(dataIndex, {
                     rules: [{
-                      required: true,
-                      message: `Please Input ${title}!`,
+                      required,
+                      message: `请输入 ${title}!`,
                     }],
                     initialValue: record[dataIndex],
                   })(this.getInput())}
@@ -82,9 +83,25 @@ class Search extends Component {
       title: '摇号楼盘',
       dataIndex: 'house_name',
       editable: true,
+      required: true,
     }, {
       title: '推广名',
       dataIndex: 'alias',
+      width: 120,
+      editable: true,
+    }, {
+      title: '均价',
+      dataIndex: 'average_price',
+      width: 80,
+      editable: true,
+    }, {
+      title: '存款证明',
+      dataIndex: 'deposit',
+      width: 120,
+      editable: true,
+    }, {
+      title: '户型',
+      dataIndex: 'main_house_type',
       width: 120,
       editable: true,
     }, {
@@ -100,12 +117,12 @@ class Search extends Component {
     }, {
       title: '可售房源套数',
       dataIndex: 'house_number',
-      width: 100,
+      width: 80,
       editable: true,
     }, {
       title: '无房家庭套数',
       dataIndex: 'homeless_number',
-      width: 100,
+      width: 80,
       editable: true,
     },{
       title: '摇号时间',
@@ -360,6 +377,7 @@ class Search extends Component {
           inputType: col.dataIndex === 'age' ? 'number' : 'text',
           dataIndex: col.dataIndex,
           title: col.title,
+          required: col.required,
           editing: this.isEditing(record),
         }),
       };
