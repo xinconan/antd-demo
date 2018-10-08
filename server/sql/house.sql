@@ -17,6 +17,9 @@ CREATE TABLE `house` (
   `result_sync` tinyint(1) DEFAULT '0' COMMENT '摇号结果是否同步，1是0否',
   `alias` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '楼盘推广名',
   `remark` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  `deposit` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '存款证明',
+  `average_price` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '均价',
+  `main_house_type` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '主力户型',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 SET FOREIGN_KEY_CHECKS=1;
