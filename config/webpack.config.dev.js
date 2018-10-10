@@ -11,6 +11,7 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -215,6 +216,14 @@ module.exports = {
     ],
   },
   plugins: [
+    // To strip all locales except “en”
+    new MomentLocalesPlugin(),
+
+    // Or: To strip all locales except “en”, “zh-cn”
+    // (“en” is built into Moment and can’t be removed)
+    new MomentLocalesPlugin({
+        localesToKeep: ['zh-cn'],
+    }),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
