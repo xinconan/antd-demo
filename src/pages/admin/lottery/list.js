@@ -95,8 +95,6 @@ class Lottery extends Component {
       }else {
         socket.emit('task', {houseId, type: 'reg'})
       }
-    }else{
-      message.error(status.msg || status.error);
     }
   }
   // sync 同步登记结果
@@ -104,7 +102,6 @@ class Lottery extends Component {
     let status = await axios.get('/api/sync/isRegSync', {
       params: {id: houseId}
     });
-    // status = status.data;
     if(status.code === 0) {
       if(status.data.reg_sync !== 1) {
         message.error('请先同步报名表！');
@@ -113,8 +110,6 @@ class Lottery extends Component {
       }else {
         socket.emit('task', {houseId, type: 'result'})
       }
-    }else{
-      message.error(status.msg || status.error);
     }
   }
   fetch = (params={pageNum:1})=>{
