@@ -19,4 +19,22 @@ export default{
     diff = last.diff(now, 'minutes');
     return diff + '分钟'
   },
+  // 获取微信支付签名信息
+  getWxSign: function(signStr){
+    // appid=wx578e61bc215aeaa0|noncestr=c515i435t4gs8b94ie25bvatfv2pl899|package=prepay_id=|signType=MD5|timestamp=1539139173|sign=9C7BB20DB3FE6EB333E740D0122D3B34
+    let sign = {};
+    if(!signStr) return sign;
+    const arr = signStr.split('|');
+    for(let i=0;i<arr.length;i++) {
+      // 使用indexOf获取=位置，
+      // 不使用match匹配一次，因为是从右边匹配的，
+      // 'package=prepay_id='  match(/(.*)=(.*)/)  => package=prepay_id  '' 期望的是 'package','prepay_id='
+      let v = arr[i];
+      let idx = v.indexOf('=');
+      let key = v.substring(0,idx);
+      let value = v.substring(idx+1);
+      sign[key] = value;
+    }
+    return sign;
+  }
 }
