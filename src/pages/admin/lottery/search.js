@@ -90,8 +90,18 @@ class Search extends Component {
       width: 120,
       editable: true,
     }, {
+      title: '区域',
+      dataIndex: 'area',
+      width: 80,
+      editable: true,
+    }, {
       title: '均价',
       dataIndex: 'average_price',
+      width: 80,
+      editable: true,
+    }, {
+      title: '装修',
+      dataIndex: 'decoration',
       width: 80,
       editable: true,
     }, {

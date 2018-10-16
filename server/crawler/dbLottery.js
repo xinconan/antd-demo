@@ -6,6 +6,8 @@ const insertHouse = async(houseInfo) => {
     id, 
     house_name, 
     alias,
+    area,
+    decoration,  // 装修
     lottery_time, 
     status, 
     homeless_number, 
@@ -23,6 +25,8 @@ const insertHouse = async(houseInfo) => {
       ...house[0],
       house_name, 
       alias,
+      area,
+      decoration,
       lottery_time, 
       status, 
       homeless_number, 
@@ -37,6 +41,8 @@ const insertHouse = async(houseInfo) => {
     return mysql('house').insert({
       id,
       alias,
+      area,
+      decoration,
       house_name,
       lottery_time,
       status,
