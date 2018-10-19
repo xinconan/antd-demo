@@ -36,5 +36,18 @@ export default{
       sign[key] = value;
     }
     return sign;
+  },
+  /**
+   * 获取ua中指定key对应的值，如支付宝版本号AlipayClient
+   * @param {*} ua 
+   * @param {*} key 
+   */
+  getUaValue(ua, key){
+    const version = ua.match(new RegExp(`${key}/(.*)`));
+    if(version && version.length) {
+      return version[1].split(' ')[0]
+    }else{
+      return ''
+    }
   }
 }
