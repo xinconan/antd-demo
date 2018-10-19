@@ -52,3 +52,12 @@ describe('util test getUaValue', ()=>{
     expect(utils.getUaValue(ua, 'YunClient')).toBe('2.9')
   })
 })
+
+describe('util test compareVersion', ()=>{
+  it('test a gt b', ()=>{
+    expect(utils.compareVersion('2.9.4', '2.9.3')).toBe(1)
+  });
+  it('test a lt b', ()=>{
+    expect(utils.compareVersion('2.9', '2.9.4')).toBe(-1)
+  })
+})

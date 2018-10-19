@@ -49,5 +49,31 @@ export default{
     }else{
       return ''
     }
+  },
+  /**
+   * 比较两个给定的版本号（x.y.z形式，符合semver规范），
+   * va大于vb返回1，va小于vb返回-1，相等返回0
+   * 如果需要更复杂的比较，可以使用semver包比较
+   * @param {*} va 
+   * @param {*} vb 
+   */
+  compareVersion: function(va, vb){
+    const v1 = va.split('.');
+    const v2 = vb.split('.');
+    return this.compare(v1[0], v2[0]) ||
+          this.compare(v1[1], v2[1]) ||
+          this.compare(v1[2], v2[2]);
+  },
+  compare(a,b){
+    // to number
+    if(a && b) {
+      a = +a;
+      b = +b;
+    }
+    return (a && !b)? 1
+        : (b && !a) ? -1
+        : a < b ? -1
+        : a > b ? 1
+        : 0;
   }
 }
