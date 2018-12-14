@@ -158,10 +158,7 @@ class Lottery extends Component {
     axios.post('/api/sync/houseInfo', houseInfo)
     .then(resp => {
       if(resp.code===0){
-        Modal.success({
-          title: '同步成功',
-          content: `${houseInfo.house_name} 信息同步成功！`
-        });
+        message.success(`${houseInfo.house_name} 信息同步成功！`);
         this.setState({
           showModal: false
         });
